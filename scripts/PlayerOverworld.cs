@@ -3,15 +3,38 @@ using Godot;
 using System;
 using System.Linq;
 
-public partial class Player : Area2D
+public partial class PlayerOverworld : Area2D
 {
 	PlayerMovementState movementState;
+	
+	[Signal]
+	public delegate void PositionChangedEventHandler(Vector2 position);
+
+
+	[Export]
+	public int MaxHealth = 100;
+	public int health = 50;
+	
+	[Signal]
+	public delegate void HealthChangedEventHandler(int health);
+
+
+
+	[Export]
+	public int level = 1;
+	public int exp = 0;
 
 
 	[Export]
 	public float MovementSpeed = 20.0f;
 	public Direction direction;
 	public Vector2 ScreenSize;
+
+	
+
+	private Camera2D camera;
+	private CollisionShape2D collider;
+	private AnimatedSprite2D sprite;
 
 
 
@@ -22,11 +45,19 @@ public partial class Player : Area2D
 		direction = Direction.DOWN;
 		ScreenSize = GetViewport().GetVisibleRect().Size;
 
-		AnimatedSprite2D sprite = GetNode<AnimatedSprite2D>("Sprite");
+		sprite = GetNode<AnimatedSprite2D>("Sprite");
 		sprite.Scale = Scale;
 
-		CollisionShape2D collider = GetNode<CollisionShape2D>("Collider");
+		collider = GetNode<CollisionShape2D>("Collider");
 		collider.Scale = Scale;
+
+		camera = GetNode<Camera2D>("Camera2D");
+		camera.Position = Position;
+
+		health = MaxHealth;
+
+
+		EmitSignal(SignalName.HealthChanged, health);
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -38,7 +69,6 @@ public partial class Player : Area2D
 		velocity.X = Godot.Input.GetAxis("move_left", "move_right");
 		velocity.Y = Godot.Input.GetAxis("move_up", "move_down");
 
-		AnimatedSprite2D animatedSprite = GetNode<AnimatedSprite2D>("Sprite");
 
 
 		if (velocity.Length() > 0)
@@ -73,16 +103,16 @@ public partial class Player : Area2D
 					switch (direction)
 					{
 						case Direction.UP:
-							animatedSprite.Animation = "stand_up";
+							sprite.Animation = "stand_up";
 							break;
 						case Direction.DOWN:
-							animatedSprite.Animation = "stand_down";
+							sprite.Animation = "stand_down";
 							break;
 						case Direction.LEFT:
-							animatedSprite.Animation = "stand_left";
+							sprite.Animation = "stand_left";
 							break;
 						case Direction.RIGHT:
-							animatedSprite.Animation = "stand_right";
+							sprite.Animation = "stand_right";
 							break;
 
 						default:
@@ -96,16 +126,16 @@ public partial class Player : Area2D
 				{
 					switch (direction){
 					case Direction.UP:
-						animatedSprite.Animation = "walk_up";
+						sprite.Animation = "walk_up";
 						break;
 					case Direction.DOWN:
-						animatedSprite.Animation = "walk_down";
+						sprite.Animation = "walk_down";
 						break;
 					case Direction.LEFT:
-						animatedSprite.Animation = "walk_left";
+						sprite.Animation = "walk_left";
 						break;
 					case Direction.RIGHT:
-						animatedSprite.Animation = "walk_right";
+						sprite.Animation = "walk_right";
 						break;
 
 					default:
@@ -129,8 +159,26 @@ public partial class Player : Area2D
 		
 		Position += velocity.Normalized() * MovementSpeed * ((float)delta);
 		
-		animatedSprite.Play();
+		sprite.Play();
 
+		if ( Input.IsActionJustPressed("CreateDamage") ){
+			CreateDamage(10);
+		}else if ( Input.IsActionJustPressed("HealthReset") ){
+			health = MaxHealth;
+			EmitSignal(SignalName.HealthChanged, health);
+		}
+
+	}
+
+	public void CreateDamage(int value){
+		health -= value;
+
+		Godot.GD.Print("Health: " + health);
+
+		if (health <= 0){
+			health = 0;	// Game over
+		}
+		EmitSignal(SignalName.HealthChanged, health);
 	}
 
 }

@@ -1,7 +1,7 @@
 [gd_scene load_steps=25 format=3 uid="uid://ka2efeeidt2f"]
 
 [ext_resource type="Texture2D" uid="uid://cw11g7fmjel52" path="res://sprites/Hero.png" id="1_01tm5"]
-[ext_resource type="Script" path="res://scripts/Player.cs" id="1_epcyl"]
+[ext_resource type="Script" path="res://scripts/PlayerOverworld.cs" id="1_wx4jb"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3nb0r"]
 atlas = ExtResource("1_01tm5")
@@ -189,8 +189,7 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3yxjm"]
 
 [node name="Player" type="Area2D"]
-script = ExtResource("1_epcyl")
-metadata/_edit_group_ = true
+script = ExtResource("1_wx4jb")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_tmvkn")
@@ -198,3 +197,7 @@ animation = &"stand_left"
 
 [node name="Collider" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_3yxjm")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(1.6, 1.6)
+position_smoothing_enabled = true
