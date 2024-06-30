@@ -4,16 +4,16 @@ using System.Diagnostics.Tracing;
 
 namespace CrossroadsofFate.globals
 {
-	public class Function{
-
-		public int CalculateRequiredExp(int level){
-			int power = 2;
+	public class Functions
+	{
+		public static int CalculateRequiredExp(int level)
+		{
+			int power = 4;
 			int multiplier = 20;
-			if(level == 1){
-				return 0;
-			}
-			int exp = (int)Math.Pow(level,power) + (level*multiplier);
+
+			int exp = (int)Math.Floor(Math.Pow(level, power)) + (level * multiplier);
 			return exp;
 		}
 	}
+	
 }

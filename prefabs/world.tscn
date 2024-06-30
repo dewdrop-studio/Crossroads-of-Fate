@@ -1,33 +1,47 @@
-[gd_scene load_steps=6 format=3 uid="uid://cevdds0n6js06"]
+[gd_scene load_steps=8 format=3 uid="uid://cevdds0n6js06"]
 
 [ext_resource type="PackedScene" uid="uid://ka2efeeidt2f" path="res://prefabs/player_overworld.tscn" id="1_r4ijt"]
-[ext_resource type="Texture2D" uid="uid://byngmt51mh3wf" path="res://ui/ProgressBar/HealthBarBackground.png" id="2_4ctst"]
+[ext_resource type="Texture2D" uid="uid://byngmt51mh3wf" path="res://ui/ProgressBar/ProgressBarBackground.png" id="2_4ctst"]
 [ext_resource type="Script" path="res://scripts/HPBar.cs" id="2_xp6hf"]
-[ext_resource type="Texture2D" uid="uid://bp407q0skqkit" path="res://ui/ProgressBar/HealthBarOverlay.png" id="3_33774"]
+[ext_resource type="Texture2D" uid="uid://bp407q0skqkit" path="res://ui/ProgressBar/ProgressBarOverlay.png" id="3_33774"]
 [ext_resource type="Texture2D" uid="uid://fk1uxu58lqqd" path="res://ui/ProgressBar/HealthBarFill.png" id="4_3lru6"]
+[ext_resource type="Texture2D" uid="uid://iqk16ujdy2ed" path="res://ui/ProgressBar/EXPBarFill.png" id="6_r67v7"]
+[ext_resource type="Script" path="res://scripts/EXPBar.cs" id="7_vm0pp"]
 
 [node name="World" type="Node2D"]
 
 [node name="Player" parent="." instance=ExtResource("1_r4ijt")]
 position = Vector2(7, 1)
 
-[node name="Control" type="Control" parent="Player"]
+[node name="UILayer" type="Control" parent="Player"]
 layout_mode = 3
 anchors_preset = 0
-offset_left = -352.0
-offset_top = -196.0
-offset_right = 346.0
-offset_bottom = 185.0
+offset_left = -562.0
+offset_top = -310.0
+offset_right = 560.0
+offset_bottom = 311.0
 
-[node name="HPBar" type="TextureProgressBar" parent="Player/Control"]
+[node name="HPBar" type="TextureProgressBar" parent="Player/UILayer"]
 layout_direction = 2
 layout_mode = 0
-offset_left = 17.215
-offset_top = 13.0
-offset_right = 97.215
-offset_bottom = 23.0
+offset_left = 5.0
+offset_right = 85.0
+offset_bottom = 16.0
 mouse_filter = 2
 texture_under = ExtResource("2_4ctst")
 texture_over = ExtResource("3_33774")
 texture_progress = ExtResource("4_3lru6")
+tint_under = Color(0.507244, 1.23937e-06, 3.36915e-07, 1)
 script = ExtResource("2_xp6hf")
+
+[node name="EXPBar" type="TextureProgressBar" parent="Player/UILayer"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 24.0
+offset_right = 85.0
+offset_bottom = 40.0
+texture_under = ExtResource("2_4ctst")
+texture_over = ExtResource("3_33774")
+texture_progress = ExtResource("6_r67v7")
+tint_under = Color(0.117647, 0.792157, 0.74902, 0.368627)
+script = ExtResource("7_vm0pp")

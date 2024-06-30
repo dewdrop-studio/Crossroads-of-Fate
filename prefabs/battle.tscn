@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://b42yu4w1yb2jp"]
+
+[node name="Battle" type="Node2D"]
+
+[node name="Background" type="TextureRect" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="PlayerSide" type="Node" parent="."]
+
+[node name="EnemySide" type="Node" parent="."]

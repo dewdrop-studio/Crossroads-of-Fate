@@ -1,7 +1,9 @@
 using CrossroadsofFate.globals;
 using Godot;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Xml.XPath;
 
 public partial class PlayerOverworld : Area2D
 {
@@ -23,6 +25,8 @@ public partial class PlayerOverworld : Area2D
 	[Export]
 	public int level = 1;
 	public int exp = 0;
+	[Signal]
+	public delegate void ExpChangedEventHandler(int level, int exp);
 
 
 	[Export]
@@ -163,6 +167,8 @@ public partial class PlayerOverworld : Area2D
 
 		if ( Input.IsActionJustPressed("CreateDamage") ){
 			CreateDamage(10);
+			GiveExp(100);
+			
 		}else if ( Input.IsActionJustPressed("HealthReset") ){
 			health = MaxHealth;
 			EmitSignal(SignalName.HealthChanged, health);
@@ -181,4 +187,21 @@ public partial class PlayerOverworld : Area2D
 		EmitSignal(SignalName.HealthChanged, health);
 	}
 
+	public void GiveExp(int value){
+		exp += value;
+		var required = Functions.CalculateRequiredExp(level);
+
+		while (exp >= required){
+			LevelUp();
+			required = Functions.CalculateRequiredExp(level);
+			Godot.GD.Print("Current EXP: " + exp + " / " + required);
+		}
+		EmitSignal(SignalName.ExpChanged, level, exp);
+	}
+
+	private void LevelUp(){
+		level++;
+		Godot.GD.Print("Level Up: " + level);
+		EmitSignal(SignalName.ExpChanged, level, exp);
+	}
 }
