@@ -6,11 +6,10 @@ public partial class EXPBar : TextureProgressBar
 	
 	private PlayerOverworld player;
 
-
 	public override void _Ready()
 	{
 		player = GetNode<PlayerOverworld>("/root/World/Player");
-		
+			
 		
 		Godot.GD.Print("Player E: " + player.health);
 		
