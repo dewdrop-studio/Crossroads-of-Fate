@@ -4,7 +4,7 @@ using System.Diagnostics.Tracing;
 
 namespace CrossroadsofFate.globals
 {
-	public class Functions
+	public class Leveling
 	{
 		public static int CalculateRequiredExp(int level)
 		{
@@ -15,5 +15,7 @@ namespace CrossroadsofFate.globals
 			return exp;
 		}
 	}
+
+	
 	
 }

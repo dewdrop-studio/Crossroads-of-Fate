@@ -1,3 +1,4 @@
+using CrossroadsofFate.globals;
 using Godot;
 using System;
 
@@ -13,10 +14,8 @@ public partial class EXPBar : TextureProgressBar
 		
 		Godot.GD.Print("Player E: " + player.health);
 		
-		MaxValue = player.MaxHealth;
-		Value = player.health;
-
-
+		MaxValue = Leveling.CalculateRequiredExp(player.level) - Leveling.CalculateRequiredExp(player.level - 1);
+		Value = player.exp;
 
 		Godot.GD.Print("Binding Signal to Player Health Change\n");
 		player.ExpChanged += OnEXPChange;
@@ -32,7 +31,7 @@ public partial class EXPBar : TextureProgressBar
 
 	public void OnEXPChange(int level, int exp){
 		
-		MaxValue = CrossroadsofFate.globals.Functions.CalculateRequiredExp(level);
+		MaxValue = Leveling.CalculateRequiredExp(level);
 		Value = exp;
 	}
 	

@@ -1,13 +1,10 @@
 using CrossroadsofFate.globals;
 using Godot;
 using System;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Xml.XPath;
 
 public partial class PlayerOverworld : Area2D
 {
-	PlayerMovementState movementState;
+	State.PlayerMovementState movementState;
 	
 	[Signal]
 	public delegate void PositionChangedEventHandler(Vector2 position);
@@ -15,14 +12,14 @@ public partial class PlayerOverworld : Area2D
 
 	[Export]
 	public int MaxHealth = 100;
-	public int health = 50;
+	[Export]
+	public int health = 100;
 	
 	[Signal]
 	public delegate void HealthChangedEventHandler(int health);
 
 
 
-	[Export]
 	public int level = 1;
 	public int exp = 0;
 	[Signal]
@@ -31,7 +28,8 @@ public partial class PlayerOverworld : Area2D
 
 	[Export]
 	public float MovementSpeed = 20.0f;
-	public Direction direction;
+	[Export]
+	public State.Direction direction;
 	public Vector2 ScreenSize;
 
 	
@@ -45,8 +43,8 @@ public partial class PlayerOverworld : Area2D
 	public override void _Ready()
 	{
 
-		movementState = PlayerMovementState.STOPPED;
-		direction = Direction.DOWN;
+		movementState = State.PlayerMovementState.STOPPED;
+		direction = State.Direction.DOWN;
 		ScreenSize = GetViewport().GetVisibleRect().Size;
 
 		sprite = GetNode<AnimatedSprite2D>("Sprite");
@@ -77,22 +75,22 @@ public partial class PlayerOverworld : Area2D
 
 		if (velocity.Length() > 0)
 		{
-			movementState = PlayerMovementState.WALKING;
+			movementState = State.PlayerMovementState.WALKING;
 
 			if (velocity.Y != 0)
 			{
-				direction = (velocity.Y > 0) ? Direction.DOWN : Direction.UP;
+				direction = (velocity.Y > 0) ? State.Direction.DOWN : State.Direction.UP;
 			}
 			if (velocity.X != 0)
 			{
-				direction = (velocity.X > 0) ? Direction.RIGHT : Direction.LEFT;
+				direction = (velocity.X > 0) ? State.Direction.RIGHT : State.Direction.LEFT;
 			}
 
 
 		}
 		else
 		{
-			movementState = PlayerMovementState.STOPPED;
+			movementState = State.PlayerMovementState.STOPPED;
 		}
 
 
@@ -101,21 +99,21 @@ public partial class PlayerOverworld : Area2D
 
 		switch (movementState)
 		{
-			case PlayerMovementState.STOPPED:
+			case State.PlayerMovementState.STOPPED:
 				{
 
 					switch (direction)
 					{
-						case Direction.UP:
+						case State.Direction.UP:
 							sprite.Animation = "stand_up";
 							break;
-						case Direction.DOWN:
+						case State.Direction.DOWN:
 							sprite.Animation = "stand_down";
 							break;
-						case Direction.LEFT:
+						case State.Direction.LEFT:
 							sprite.Animation = "stand_left";
 							break;
-						case Direction.RIGHT:
+						case State.Direction.RIGHT:
 							sprite.Animation = "stand_right";
 							break;
 
@@ -126,19 +124,19 @@ public partial class PlayerOverworld : Area2D
 					break;
 				}
 
-			case PlayerMovementState.WALKING:
+			case State.PlayerMovementState.WALKING:
 				{
 					switch (direction){
-					case Direction.UP:
+					case State.Direction.UP:
 						sprite.Animation = "walk_up";
 						break;
-					case Direction.DOWN:
+					case State.Direction.DOWN:
 						sprite.Animation = "walk_down";
 						break;
-					case Direction.LEFT:
+					case State.Direction.LEFT:
 						sprite.Animation = "walk_left";
 						break;
-					case Direction.RIGHT:
+					case State.Direction.RIGHT:
 						sprite.Animation = "walk_right";
 						break;
 
@@ -150,7 +148,7 @@ public partial class PlayerOverworld : Area2D
 					break;
 				}
 
-			case PlayerMovementState.BINDED:
+			case State.PlayerMovementState.BINDED:
 				{
 					
 					break;
@@ -189,11 +187,11 @@ public partial class PlayerOverworld : Area2D
 
 	public void GiveExp(int value){
 		exp += value;
-		var required = Functions.CalculateRequiredExp(level);
+		var required = Leveling.CalculateRequiredExp(level);
 
 		while (exp >= required){
 			LevelUp();
-			required = Functions.CalculateRequiredExp(level);
+			required = Leveling.CalculateRequiredExp(level);
 			Godot.GD.Print("Current EXP: " + exp + " / " + required);
 		}
 		EmitSignal(SignalName.ExpChanged, level, exp);
