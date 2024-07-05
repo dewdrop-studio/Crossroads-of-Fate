@@ -1,4 +1,4 @@
-using CrossroadsofFate.globals;
+using CrossroadsofFate;
 using Godot;
 using System;
 

@@ -1,6 +1,8 @@
-using CrossroadsofFate.globals;
+using CrossroadsofFate;
 using Godot;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 public partial class PlayerOverworld : Area2D
 {
@@ -39,6 +41,8 @@ public partial class PlayerOverworld : Area2D
 	private AnimatedSprite2D sprite;
 
 
+
+	private IList<Items.InventoryItem> inventory;
 
 	public override void _Ready()
 	{
@@ -186,6 +190,10 @@ public partial class PlayerOverworld : Area2D
 	}
 
 	public void GiveExp(int value){
+		if (level >= Leveling.MAX_LEVEL){
+			return;
+		}
+		
 		exp += value;
 		var required = Leveling.CalculateRequiredExp(level);
 
@@ -201,5 +209,29 @@ public partial class PlayerOverworld : Area2D
 		level++;
 		Godot.GD.Print("Level Up: " + level);
 		EmitSignal(SignalName.ExpChanged, level, exp);
+	}
+
+	public void AddItem(int id, int quantity){
+		Items.InventoryItem item = null;
+
+		try{
+			item = Items.GetItem(id);
+		}catch(Exception e){
+			Godot.GD.PrintErr("Error: " + e.Message);
+			return;
+		}
+		
+
+		if (item.stackable){
+			foreach(Items.InventoryItem i in inventory){
+				if (i.id == id){
+					i.quantity += quantity;
+					return;
+				}
+			}
+		}
+
+		item.quantity = quantity;
+		inventory.Add(item);
 	}
 }

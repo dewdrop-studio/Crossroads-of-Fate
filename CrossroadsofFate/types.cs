@@ -1,7 +1,7 @@
 
 
 
-namespace CrossroadsofFate.globals
+namespace CrossroadsofFate
 {
     public class State
     {
@@ -17,4 +17,6 @@ namespace CrossroadsofFate.globals
             UP, RIGHT, DOWN, LEFT,
         }
     }
+
+
 }
