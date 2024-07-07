@@ -10,6 +10,10 @@ namespace CrossroadsofFate
 
 		public static int CalculateRequiredExp(int level)
 		{
+			if (level <= 0){
+				return 0;
+			}
+			
 			int power = 4;
 			int multiplier = 20;
 
@@ -22,6 +26,7 @@ namespace CrossroadsofFate
 		const int MIN_BATTLES = 2;
 		public static int CalculateGainedExp(int level)
 		{
+
 			int required = CalculateRequiredExp(level);
 			int random = new Random().Next(MIN_BATTLES, MAX_BATTLES);
 

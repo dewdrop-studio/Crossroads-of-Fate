@@ -165,6 +165,7 @@ public partial class PlayerOverworld : Area2D
 		
 		Position += velocity.Normalized() * MovementSpeed * ((float)delta);
 		
+		
 		sprite.Play();
 
 		if ( Input.IsActionJustPressed("CreateDamage") ){
