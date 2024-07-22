@@ -2,7 +2,7 @@ using CrossroadsofFate;
 using Godot;
 using System;
 
-public partial class EXPBar : TextureProgressBar
+public partial class ExpBar : TextureProgressBar
 {
 
 	public override void _Ready()

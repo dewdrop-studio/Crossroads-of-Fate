@@ -1,0 +1,39 @@
+[gd_scene load_steps=7 format=3 uid="uid://cqvxpx66rin7p"]
+
+[ext_resource type="Texture2D" uid="uid://byngmt51mh3wf" path="res://ui/ProgressBar/ProgressBarBackground.png" id="1_ej5st"]
+[ext_resource type="Texture2D" uid="uid://bp407q0skqkit" path="res://ui/ProgressBar/ProgressBarOverlay.png" id="2_1liv2"]
+[ext_resource type="Texture2D" uid="uid://fk1uxu58lqqd" path="res://ui/ProgressBar/HealthBarFill.png" id="3_ex5q0"]
+[ext_resource type="Script" path="res://scripts/HpBar.cs" id="4_bu4fu"]
+[ext_resource type="Texture2D" uid="uid://iqk16ujdy2ed" path="res://ui/ProgressBar/EXPBarFill.png" id="5_oc4y2"]
+[ext_resource type="Script" path="res://scripts/ExpBar.cs" id="6_001sh"]
+
+[node name="WorldUi" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+size_flags_horizontal = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+follow_viewport_enabled = true
+
+[node name="HpBar" type="TextureProgressBar" parent="CanvasLayer"]
+offset_left = 14.0
+offset_top = 4.0
+offset_right = 94.0
+offset_bottom = 44.0
+texture_under = ExtResource("1_ej5st")
+texture_over = ExtResource("2_1liv2")
+texture_progress = ExtResource("3_ex5q0")
+tint_under = Color(0.268634, 1.8049e-07, 7.21961e-08, 1)
+script = ExtResource("4_bu4fu")
+
+[node name="ExpBar" type="TextureProgressBar" parent="CanvasLayer"]
+offset_left = 14.0
+offset_top = 24.0
+offset_right = 94.0
+offset_bottom = 64.0
+texture_under = ExtResource("1_ej5st")
+texture_over = ExtResource("2_1liv2")
+texture_progress = ExtResource("5_oc4y2")
+tint_under = Color(0, 0.458364, 7.70092e-07, 1)
+script = ExtResource("6_001sh")

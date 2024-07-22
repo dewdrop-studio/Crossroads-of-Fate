@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class HPBar : TextureProgressBar
+public partial class HpBar : TextureProgressBar
 {
 	
 	private PlayerOverworld player;

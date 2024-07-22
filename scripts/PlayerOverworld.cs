@@ -4,10 +4,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-public partial class PlayerOverworld : Area2D
+public partial class PlayerOverworld : CharacterBody2D
 {
 	State.PlayerMovementState movementState;
-	
+
 	[Signal]
 	public delegate void PositionChangedEventHandler(Vector2 position);
 
@@ -16,7 +16,7 @@ public partial class PlayerOverworld : Area2D
 	public int MaxHealth = 100;
 	[Export]
 	public int health = 100;
-	
+
 	[Signal]
 	public delegate void HealthChangedEventHandler(int health);
 
@@ -34,7 +34,7 @@ public partial class PlayerOverworld : Area2D
 	public State.Direction direction;
 	public Vector2 ScreenSize;
 
-	
+
 
 	private Camera2D camera;
 	private CollisionShape2D collider;
@@ -57,7 +57,7 @@ public partial class PlayerOverworld : Area2D
 		collider = GetNode<CollisionShape2D>("Collider");
 		collider.Scale = Scale;
 
-		camera = GetNode<Camera2D>("Camera2D");
+		camera = GetNode<Camera2D>("/root/World/Camera");
 		camera.Position = Position;
 
 		health = MaxHealth;
@@ -74,6 +74,22 @@ public partial class PlayerOverworld : Area2D
 		Vector2 velocity = Vector2.Zero;
 		velocity.X = Godot.Input.GetAxis("move_left", "move_right");
 		velocity.Y = Godot.Input.GetAxis("move_up", "move_down");
+
+		velocity = velocity.Normalized();
+
+		if (velocity.Length() != 0)
+		{
+			var collisionInfo = MoveAndCollide(velocity * MovementSpeed * ((float)delta));
+			if (collisionInfo != null)
+			{
+				velocity = Vector2.Zero;
+			}
+			else
+			{
+			}
+			EmitSignal(SignalName.PositionChanged, Position);
+
+		}
 
 
 
@@ -130,23 +146,24 @@ public partial class PlayerOverworld : Area2D
 
 			case State.PlayerMovementState.WALKING:
 				{
-					switch (direction){
-					case State.Direction.UP:
-						sprite.Animation = "walk_up";
-						break;
-					case State.Direction.DOWN:
-						sprite.Animation = "walk_down";
-						break;
-					case State.Direction.LEFT:
-						sprite.Animation = "walk_left";
-						break;
-					case State.Direction.RIGHT:
-						sprite.Animation = "walk_right";
-						break;
+					switch (direction)
+					{
+						case State.Direction.UP:
+							sprite.Animation = "walk_up";
+							break;
+						case State.Direction.DOWN:
+							sprite.Animation = "walk_down";
+							break;
+						case State.Direction.LEFT:
+							sprite.Animation = "walk_left";
+							break;
+						case State.Direction.RIGHT:
+							sprite.Animation = "walk_right";
+							break;
 
-					default:
-					break;
-				}
+						default:
+							break;
+					}
 
 
 					break;
@@ -154,7 +171,7 @@ public partial class PlayerOverworld : Area2D
 
 			case State.PlayerMovementState.BINDED:
 				{
-					
+
 					break;
 				}
 
@@ -162,43 +179,48 @@ public partial class PlayerOverworld : Area2D
 				break;
 		}
 
-		
-		Position += velocity.Normalized() * MovementSpeed * ((float)delta);
-		
-		
+
 		sprite.Play();
 
-		if ( Input.IsActionJustPressed("CreateDamage") ){
+		if (Input.IsActionJustPressed("CreateDamage"))
+		{
 			CreateDamage(10);
 			GiveExp(100);
-			
-		}else if ( Input.IsActionJustPressed("HealthReset") ){
+
+		}
+		else if (Input.IsActionJustPressed("HealthReset"))
+		{
 			health = MaxHealth;
 			EmitSignal(SignalName.HealthChanged, health);
 		}
 
 	}
 
-	public void CreateDamage(int value){
+	public void CreateDamage(int value)
+	{
 		health -= value;
 
 		Godot.GD.Print("Health: " + health);
 
-		if (health <= 0){
-			health = 0;	// Game over
+		if (health <= 0)
+		{
+			health = 0; // Game over
 		}
 		EmitSignal(SignalName.HealthChanged, health);
 	}
 
-	public void GiveExp(int value){
-		if (level >= Leveling.MAX_LEVEL){
+	public void GiveExp(int value)
+	{
+		if (level >= Leveling.MAX_LEVEL)
+		{
 			return;
 		}
-		
+
 		exp += value;
 		var required = Leveling.CalculateRequiredExp(level);
 
-		while (exp >= required){
+		while (exp >= required)
+		{
 			LevelUp();
 			required = Leveling.CalculateRequiredExp(level);
 			Godot.GD.Print("Current EXP: " + exp + " / " + required);
@@ -206,26 +228,34 @@ public partial class PlayerOverworld : Area2D
 		EmitSignal(SignalName.ExpChanged, level, exp);
 	}
 
-	private void LevelUp(){
+	private void LevelUp()
+	{
 		level++;
 		Godot.GD.Print("Level Up: " + level);
 		EmitSignal(SignalName.ExpChanged, level, exp);
 	}
 
-	public void AddItem(int id, int quantity){
+	public void AddItem(int id, int quantity)
+	{
 		Items.InventoryItem item = null;
 
-		try{
+		try
+		{
 			item = Items.GetItem(id);
-		}catch(Exception e){
+		}
+		catch (Exception e)
+		{
 			Godot.GD.PrintErr("Error: " + e.Message);
 			return;
 		}
-		
 
-		if (item.stackable){
-			foreach(Items.InventoryItem i in inventory){
-				if (i.id == id){
+
+		if (item.stackable)
+		{
+			foreach (Items.InventoryItem i in inventory)
+			{
+				if (i.id == id)
+				{
 					i.quantity += quantity;
 					return;
 				}
