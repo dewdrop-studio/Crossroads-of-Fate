@@ -9,3 +9,9 @@ offset_bottom = 40.0
 [node name="PlayerSide" type="Node" parent="."]
 
 [node name="EnemySide" type="Node" parent="."]
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1159.0
+offset_bottom = 649.0

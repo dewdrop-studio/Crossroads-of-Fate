@@ -188,7 +188,7 @@ animations = [{
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3yxjm"]
 
-[node name="Player" type="Area2D"]
+[node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_wx4jb")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
@@ -197,5 +197,3 @@ animation = &"walk_up"
 
 [node name="Collider" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_3yxjm")
-
-[node name="Camera2D" type="Camera2D" parent="."]
